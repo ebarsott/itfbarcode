@@ -59,7 +59,7 @@ if __name__ == '__main__':
     #Changed length_threshold to 1 for better parsing of an array with smaller barcode lines
     barcode = itfbarcode.read_barcode(
         test_barcode_array, length_threshold=1)
-    print "Barcode is: {}".format(barcode)
+    print("Barcode is: {}".format(barcode))
 
     print('Using linescan.scan, which returns a Barcode object:')
     barcode = itfbarcode.linescan.scan(lambda n: True, test_barcode_array, {})

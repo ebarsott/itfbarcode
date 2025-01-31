@@ -104,7 +104,7 @@ def parse_linescan(
     # find thick and thin spaces/bars
     tt = numpy.mean([t[2] for t in tokens if t[0]])
     tf = numpy.mean([t[2] for t in tokens if not t[0]])
-    for i in xrange(len(tokens)):
+    for i in range(len(tokens)):
         if tokens[i][0]:
             threshold = tt
         else:
@@ -127,7 +127,7 @@ def parse_linescan(
 
 def parse_tokens(ls):
     """Take narrow/wide lines from parse_linescan and return barcode value"""
-    if isinstance(ls, (str, unicode)):
+    if isinstance(ls, str):
         vs = ls
     else:
         vs = ''.join([t[3] for t in ls])
@@ -154,10 +154,10 @@ def parse_tokens(ls):
         return -3  # invalid number of bars
     if divmod(c, 2)[1] != 0:
         return -4  # invalid number of [5-bar sequences] characters
-    nc = c / 2
+    nc = c // 2
     v = []
     # parse list of narrow/wides into value
-    for i in xrange(nc):
+    for i in range(nc):
         s = i * 10
         e = s + 10
         # lookup chars
@@ -181,11 +181,11 @@ def read_barcode(bcd, lpn=101, length_threshold=5, use_mean=False, full=False):
 
 
 def is_valid(bc):
-    return isinstance(bc, list) and not any((b < 0 for b in bc))
+    return isinstance(bc, list) and not any((int(b) < 0 for b in bc))  #Added int( ) for python3
 
 
 def gen_tokens(v, ndigits=None):
-    if isinstance(v, (str, unicode)):
+    if isinstance(v, str):
         ndigits = len(v)
         v = int(v)
     if ndigits is None:
@@ -198,7 +198,7 @@ def gen_tokens(v, ndigits=None):
     ec = 'Bsb'
     s = sc
     vc = str(v).zfill(ndigits)
-    for i in xrange(ndigits / 2):
+    for i in range(ndigits // 2):
         c0 = rchars[vc[2*i]]  # bars
         c1 = rchars[vc[2*i+1]]  # spaces
         for (j0, j1) in zip(c0, c1):
@@ -263,12 +263,12 @@ def string_to_value(bcs):
         return -1
     nc = len(bcs) // 10
     chars = ''
-    for i in xrange(nc):
+    for i in range(nc):
         s = i * 10
         e = s + 10
         bc = lookup_char(bcs[s:e:2])
         sc = lookup_char(bcs[s+1:e:2])
-        if bc < 0 or sc < 0:
+        if int(bc) < 0 or int(sc) < 0:
             return -1
         chars += bc + sc
     if len(chars) == 0:
